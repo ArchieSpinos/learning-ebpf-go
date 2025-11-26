@@ -1,1 +1,1 @@
-package hellomap
+package main

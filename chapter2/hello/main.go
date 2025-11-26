@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 )
 
@@ -27,18 +26,11 @@ func main() {
 
 	go filescanner.FileScan("/sys/kernel/debug/tracing/trace_pipe")
 
-	spec, err := ebpf.LoadCollectionSpec("bpf/hello.bpf.o")
-	if err != nil {
+	var objs helloObjects
+	if err := loadHelloObjects(&objs, nil); err != nil {
 		log.Fatal(err)
 	}
-
-	objs := struct {
-		Hello *ebpf.Program `ebpf:"hello"`
-	}{}
-	if err := spec.LoadAndAssign(&objs, nil); err != nil {
-		log.Fatal(err)
-	}
-	defer objs.Hello.Close()
+	defer objs.Close()
 
 	event := syscallName("execve")
 
