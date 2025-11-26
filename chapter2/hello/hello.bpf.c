@@ -1,4 +1,6 @@
-#include "../../../bpf/common/bpf_types.h"
+//go:build ignore
+
+#include "../../bpf/common/bpf_types.h"
 #include <bpf/bpf_helpers.h>
 
 #define __TARGET_ARCH_x86
