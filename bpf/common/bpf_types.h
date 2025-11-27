@@ -1,6 +1,9 @@
 #ifndef __BPF_TYPES_H__
 #define __BPF_TYPES_H__
 
+#define BPF_MAP_TYPE_HASH 1
+#define BPF_ANY 0
+
 typedef unsigned char      __u8;
 typedef unsigned short     __u16;
 typedef unsigned int       __u32;
