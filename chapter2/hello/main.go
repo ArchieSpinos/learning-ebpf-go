@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/cilium/ebpf/link"
+	"github.com/cilium/ebpf/rlimit"
 )
 
 func syscallName(base string) string {
@@ -23,6 +24,9 @@ func syscallName(base string) string {
 }
 
 func main() {
+	if err := rlimit.RemoveMemlock(); err != nil {
+		log.Fatal("Removing memlock:", err)
+	}
 
 	go filescanner.FileScan("/sys/kernel/debug/tracing/trace_pipe")
 
