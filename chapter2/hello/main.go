@@ -2,26 +2,15 @@ package main
 
 import (
 	"learning-ebpf-go/internal/filescanner"
+	"learning-ebpf-go/internal/sysutils"
 	"log"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/rlimit"
 )
-
-func syscallName(base string) string {
-	switch runtime.GOARCH {
-	case "amd64":
-		return "__x64_sys_" + base
-	case "arm64":
-		return "__arm64_sys_" + base
-	default:
-		return "sys_" + base
-	}
-}
 
 func main() {
 	if err := rlimit.RemoveMemlock(); err != nil {
@@ -36,7 +25,7 @@ func main() {
 	}
 	defer objs.Close()
 
-	event := syscallName("execve")
+	event := sysutils.SyscallName("execve")
 
 	kp, err := link.Kprobe(event, objs.Hello, nil)
 	if err != nil {

@@ -7,7 +7,6 @@ import (
 )
 
 func FileScan(path string) {
-
 	f, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)

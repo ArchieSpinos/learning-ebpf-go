@@ -12,8 +12,8 @@ struct {
 } events SEC(".maps");
 
 struct data_t {     
-   int pid;
-   int uid;
+    __u32 pid;
+    __u32 uid;
    char command[16];
    char message[12];
 };
