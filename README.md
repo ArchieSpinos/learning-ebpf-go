@@ -28,7 +28,7 @@ Neither Liz Rice nor Isovalent endorse or support this project. It’s my own wo
 | Chapter (target)      | Status / Notes |
 | ----------- | ----------- |
 | Chapter 1 (intro)      | (mostly conceptual, minimal code)       |
-| Chapter 2 (“Hello / basic tracing”)   | ✅ Mostly implemented in Go — file-open trace example using ring buffer & tracepoint        |
+| Chapter 2 (“Hello / basic tracing”)   | ✅         |
 
 # 🛠️ How to build & run (for a chapter / example)
 
