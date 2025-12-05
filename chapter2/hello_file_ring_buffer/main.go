@@ -25,7 +25,7 @@ func main() {
 
 	kp, err := link.Tracepoint("syscalls", "sys_enter_openat", objs.CaptureOpenat, nil)
 	if err != nil {
-		log.Fatalf("attach kprobe: %v", err)
+		log.Fatalf("attach tracepoint: %v", err)
 	}
 	defer kp.Close()
 
