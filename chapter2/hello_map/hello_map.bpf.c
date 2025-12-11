@@ -11,7 +11,6 @@ struct {
     __type(value, __u64);
 } counter_table SEC(".maps");
 
-
 char LICENSE[] SEC("license") = "GPL";
 
 SEC("raw_tracepoint/sys_enter")
