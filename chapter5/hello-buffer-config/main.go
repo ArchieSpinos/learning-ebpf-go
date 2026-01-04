@@ -25,10 +25,11 @@ func main() {
 	defer objs.Close()
 
 	event := sysutils.SyscallName("execve")
+	log.Printf("attaching to symbol: %s", event)
 
-	kp, err := link.Kprobe(event, objs.Hello, nil)
+	kp, err := link.Tracepoint("syscalls", "sys_enter_openat", objs.Hello, nil)
 	if err != nil {
-		log.Fatalf("attach kprobe: %v", err)
+		log.Fatalf("attach tracepoint: %v", err)
 	}
 	defer kp.Close()
 

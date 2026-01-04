@@ -1,14 +1,26 @@
 //go:build ignore
 
-#include <linux/types.h> 
+#include <linux/types.h>
+#include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
-#include <bpf/bpf_core_read.h>
-#include <linux/bpf.h>
+
 #include "hello-buffer-config.h"
-#include <linux/ptrace.h>
 
 char message[12] = "Hello World";
+
+struct trace_entry {
+	short unsigned int type;
+	unsigned char flags;
+	unsigned char preempt_count;
+	int pid;
+};
+struct trace_event_raw_sys_enter {
+	struct trace_entry ent;
+	long int id;
+	long unsigned int args[6];
+	char __data[0];
+};
 
 struct {
     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
@@ -27,9 +39,11 @@ struct {
     __type(value, struct user_msg_t);
 } my_config SEC(".maps");
 
-SEC("ksyscall/execve")
-int BPF_KSYSCALL(hello, const char *pathname)
-{
+
+char LICENSE[] SEC("license") = "Dual BSD/GPL";
+
+SEC("tracepoint/syscalls/sys_enter_openat")
+int hello(struct trace_event_raw_sys_enter* ctx) {
    struct data_t data = {}; 
    struct user_msg_t *p;
 
@@ -37,7 +51,7 @@ int BPF_KSYSCALL(hello, const char *pathname)
    data.uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
 
    bpf_get_current_comm(&data.command, sizeof(data.command));
-   bpf_probe_read_user_str(&data.path, sizeof(data.path), pathname);
+   bpf_probe_read_user_str(&data.path, sizeof(data.path), (const void *)ctx->args[1]);
 
    p = bpf_map_lookup_elem(&my_config, &data.uid);
    if (p != 0) {
@@ -49,5 +63,3 @@ int BPF_KSYSCALL(hello, const char *pathname)
    bpf_perf_event_output(ctx, &output, BPF_F_CURRENT_CPU, &data, sizeof(data));   
    return 0;
 }
-
-char LICENSE[] SEC("license") = "Dual BSD/GPL";
