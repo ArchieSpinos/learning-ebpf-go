@@ -31,6 +31,7 @@ Neither Liz Rice nor Isovalent endorse or support this project. It’s my own wo
 | Chapter 2 (“Hello / basic tracing”)   | ✅         |
 | Chapter 4 ("bpf system call”)   | ✅         |
 | Chapter 5 ("CO-RE”)   | ✅         |
+| Chapter 7 ("Programs and Attachment types”)   | ✅         |
 
 # 🛠️ How to build & run (for a chapter / example)
 

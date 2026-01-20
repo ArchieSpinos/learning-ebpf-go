@@ -8,15 +8,9 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
-	"structs"
 
 	"github.com/cilium/ebpf"
 )
-
-type helloMsgT struct {
-	_       structs.HostLayout
-	Message [12]int8
-}
 
 // loadHello returns the embedded CollectionSpec for hello.
 func loadHello() (*ebpf.CollectionSpec, error) {
@@ -60,7 +54,6 @@ type helloSpecs struct {
 //
 // It can be passed ebpf.CollectionSpec.Assign.
 type helloProgramSpecs struct {
-	FentryExecve     *ebpf.ProgramSpec `ebpf:"fentry_execve"`
 	KprobeDoExecve   *ebpf.ProgramSpec `ebpf:"kprobe_do_execve"`
 	KprobeSysExecve  *ebpf.ProgramSpec `ebpf:"kprobe_sys_execve"`
 	RawTpExec        *ebpf.ProgramSpec `ebpf:"raw_tp_exec"`
@@ -72,8 +65,7 @@ type helloProgramSpecs struct {
 //
 // It can be passed ebpf.CollectionSpec.Assign.
 type helloMapSpecs struct {
-	MyConfig *ebpf.MapSpec `ebpf:"my_config"`
-	Output   *ebpf.MapSpec `ebpf:"output"`
+	Output *ebpf.MapSpec `ebpf:"output"`
 }
 
 // helloVariableSpecs contains global variables before they are loaded into the kernel.
@@ -108,13 +100,11 @@ func (o *helloObjects) Close() error {
 //
 // It can be passed to loadHelloObjects or ebpf.CollectionSpec.LoadAndAssign.
 type helloMaps struct {
-	MyConfig *ebpf.Map `ebpf:"my_config"`
-	Output   *ebpf.Map `ebpf:"output"`
+	Output *ebpf.Map `ebpf:"output"`
 }
 
 func (m *helloMaps) Close() error {
 	return _HelloClose(
-		m.MyConfig,
 		m.Output,
 	)
 }
@@ -135,7 +125,6 @@ type helloVariables struct {
 //
 // It can be passed to loadHelloObjects or ebpf.CollectionSpec.LoadAndAssign.
 type helloPrograms struct {
-	FentryExecve     *ebpf.Program `ebpf:"fentry_execve"`
 	KprobeDoExecve   *ebpf.Program `ebpf:"kprobe_do_execve"`
 	KprobeSysExecve  *ebpf.Program `ebpf:"kprobe_sys_execve"`
 	RawTpExec        *ebpf.Program `ebpf:"raw_tp_exec"`
@@ -145,7 +134,6 @@ type helloPrograms struct {
 
 func (p *helloPrograms) Close() error {
 	return _HelloClose(
-		p.FentryExecve,
 		p.KprobeDoExecve,
 		p.KprobeSysExecve,
 		p.RawTpExec,

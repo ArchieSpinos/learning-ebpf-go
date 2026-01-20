@@ -24,19 +24,34 @@ func main() {
 	}
 	defer objs.Close()
 
-	// kp, err := link.Tracepoint("syscalls", "sys_enter_openat", objs.KprobeSysExecve, nil)
-	// if err != nil {
-	// 	log.Fatalf("attach tracepoint: %v", err)
-	// }
-	// defer kp.Close()
-
-	event := sysutils.SyscallName("execve")
-
-	kp, err := link.Kprobe(event, objs.KprobeSysExecve, nil)
+	kp, err := link.Kprobe(sysutils.SyscallName("execve"), objs.KprobeSysExecve, nil)
 	if err != nil {
 		log.Fatalf("attach kprobe: %v", err)
 	}
 	defer kp.Close()
+
+	kp1, err := link.Tracepoint("syscalls", "sys_enter_execve", objs.TpSysEnterExecve, nil)
+	if err != nil {
+		log.Fatalf("attach tracepoint: %v", err)
+	}
+	defer kp1.Close()
+
+	kp2, err := link.AttachTracing(link.TracingOptions{
+		Program: objs.TpBtfExec,
+	})
+	if err != nil {
+		log.Fatalf("attach tracepoint: %v", err)
+	}
+	defer kp2.Close()
+
+	kp3, err := link.AttachRawTracepoint(link.RawTracepointOptions{
+		Name:    "sched_process_exec",
+		Program: objs.RawTpExec,
+	})
+	if err != nil {
+		log.Fatalf("attach raw tracepoint: %v", err)
+	}
+	defer kp3.Close()
 
 	reader, err := perf.NewReader(objs.Output, 1024)
 	if err != nil {
