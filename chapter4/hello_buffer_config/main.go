@@ -44,11 +44,11 @@ func main() {
 
 	var msg user_msg_t
 	copy(msg.Char[:], "Hey root!")
-	if err := objs.Config.Put(uint32(0), msg); err != nil {
+	if err := objs.MyConfig.Put(uint32(0), msg); err != nil {
 		log.Fatal(err)
 	}
 	copy(msg.Char[:], "Hi user 1000!")
-	if err := objs.Config.Put(uint32(1000), msg); err != nil {
+	if err := objs.MyConfig.Put(uint32(1000), msg); err != nil {
 		log.Fatal(err)
 	}
 

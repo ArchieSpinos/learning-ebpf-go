@@ -1,26 +1,14 @@
 //go:build ignore
 
-#include <linux/types.h>
-#include <linux/bpf.h>
+// #include <linux/types.h>
+// #include <linux/bpf.h>
+#include "../../vmlinux.h"
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 
 #include "hello-buffer-config.h"
 
 char message[12] = "Hello World";
-
-struct trace_entry {
-	short unsigned int type;
-	unsigned char flags;
-	unsigned char preempt_count;
-	int pid;
-};
-struct trace_event_raw_sys_enter {
-	struct trace_entry ent;
-	long int id;
-	long unsigned int args[6];
-	char __data[0];
-};
 
 struct {
     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);

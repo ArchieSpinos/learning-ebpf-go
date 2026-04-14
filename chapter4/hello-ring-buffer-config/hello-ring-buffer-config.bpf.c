@@ -1,8 +1,9 @@
 //go:build ignore
 
-#include <linux/types.h> 
+// #include <linux/types.h> 
+// #include <linux/bpf.h>
+#include "../../vmlinux.h"
 #include <bpf/bpf_helpers.h>
-#include <linux/bpf.h>
 
 struct user_msg_t {
   char message[12];
@@ -13,7 +14,7 @@ struct {
   __uint(max_entries, 1024);
   __type(key, __u32);
   __type(value, struct user_msg_t);
-} config SEC(".maps");
+} my_config SEC(".maps");
 
 struct {
   __uint(type, BPF_MAP_TYPE_RINGBUF);
@@ -40,7 +41,7 @@ int hello(void *ctx) {
 
   bpf_get_current_comm(&data.command, sizeof(data.command));
 
-  p = bpf_map_lookup_elem(&config, &data.uid); 
+  p = bpf_map_lookup_elem(&my_config, &data.uid); 
   if (p != 0) {
     bpf_probe_read_kernel(&data.message, sizeof(data.message), p->message);
   } else {

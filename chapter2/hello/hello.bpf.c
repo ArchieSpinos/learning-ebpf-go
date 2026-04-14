@@ -1,6 +1,7 @@
 //go:build ignore
 
-#include <linux/bpf.h>
+// #include <linux/bpf.h>
+#include "../../vmlinux.h"
 #include <bpf/bpf_helpers.h>
 
 #define __TARGET_ARCH_x86

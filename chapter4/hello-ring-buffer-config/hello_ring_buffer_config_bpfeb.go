@@ -67,8 +67,8 @@ type hello_ring_buffer_configProgramSpecs struct {
 //
 // It can be passed ebpf.CollectionSpec.Assign.
 type hello_ring_buffer_configMapSpecs struct {
-	Config *ebpf.MapSpec `ebpf:"config"`
-	Output *ebpf.MapSpec `ebpf:"output"`
+	MyConfig *ebpf.MapSpec `ebpf:"my_config"`
+	Output   *ebpf.MapSpec `ebpf:"output"`
 }
 
 // hello_ring_buffer_configVariableSpecs contains global variables before they are loaded into the kernel.
@@ -97,13 +97,13 @@ func (o *hello_ring_buffer_configObjects) Close() error {
 //
 // It can be passed to loadHello_ring_buffer_configObjects or ebpf.CollectionSpec.LoadAndAssign.
 type hello_ring_buffer_configMaps struct {
-	Config *ebpf.Map `ebpf:"config"`
-	Output *ebpf.Map `ebpf:"output"`
+	MyConfig *ebpf.Map `ebpf:"my_config"`
+	Output   *ebpf.Map `ebpf:"output"`
 }
 
 func (m *hello_ring_buffer_configMaps) Close() error {
 	return _Hello_ring_buffer_configClose(
-		m.Config,
+		m.MyConfig,
 		m.Output,
 	)
 }
